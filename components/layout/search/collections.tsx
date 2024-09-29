@@ -6,7 +6,19 @@ import FilterList from './filter';
 
 async function CollectionList() {
   const collections = await getCollections();
-  return <FilterList list={collections} title="Collections" />;
+  const allIndex = collections.findIndex(collection => collection.title === 'All');
+
+  const allCollection = collections[allIndex];
+  if (allCollection) {
+    allCollection.title = 'Todos os produtos';
+  }
+
+  const allProductsIndex = collections.findIndex(collection => collection.title === 'All Products');
+  if (allProductsIndex !== -1) {
+    collections.splice(allProductsIndex, 1);
+  }
+
+  return <FilterList list={collections} title="Categorias" />;
 }
 
 const skeleton = 'mb-3 h-4 w-5/6 animate-pulse rounded';

@@ -4,8 +4,8 @@ import { defaultSort, sorting } from 'lib/constants';
 import { getProducts } from 'lib/wix';
 
 export const metadata = {
-  title: 'Search',
-  description: 'Search for products in the store.'
+  title: 'Busca',
+  description: 'Busca por produtos na loja.'
 };
 
 export const dynamic = 'force-dynamic';
@@ -26,8 +26,8 @@ export default async function SearchPage({
       {searchValue ? (
         <p className="mb-4">
           {products.length === 0
-            ? 'There are no products that match '
-            : `Showing ${products.length} ${resultsText} for `}
+            ? 'Não há produtos que correspondam a '
+            : `Mostrando ${products.length} ${resultsText} para `}
           <span className="font-bold">&quot;{searchValue}&quot;</span>
         </p>
       ) : null}

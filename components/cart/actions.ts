@@ -1,10 +1,10 @@
 'use server';
 
-import { addToCart, createCheckoutUrl, removeFromCart, updateCart } from 'lib/wix';
+import { addToCart, createCheckoutUrl, createOrderExt, removeFromCart, updateCart } from 'lib/wix';
 import { ProductVariant } from 'lib/wix/types';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { redirect, open } from 'next/navigation';
 
 export const addItem = async (
   _prevState: unknown,
@@ -59,7 +59,9 @@ export const updateItemQuantity = async (_prevState: unknown, {
 };
 
 export async function redirectToCheckout() {
-  const checkoutUrl = await createCheckoutUrl(new URL(headers().get('referer')!).origin);
+  // const checkoutUrl = await createCheckoutUrl(new URL(headers().get('referer')!).origin);
+  const orderId = await createOrderExt();
+  console.log('orderId', orderId);
 
-  redirect(checkoutUrl);
+  redirect(encodeURI(`https://wa.me/5511930957424?text=Olá, me passa o orçamento do pedido ${orderId}`));
 }

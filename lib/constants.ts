@@ -8,7 +8,7 @@ export type SortFilterItem = {
 };
 
 export const defaultSort: SortFilterItem = {
-  title: 'Name',
+  title: 'Nome',
   slug: null,
   sortKey: 'name',
   reverse: false
@@ -16,9 +16,9 @@ export const defaultSort: SortFilterItem = {
 
 export const sorting: SortFilterItem[] = [
   defaultSort,
-  { title: 'Latest arrivals', slug: 'latest-desc', sortKey: 'lastUpdated', reverse: true },
-  { title: 'Price: Low to high', slug: 'price-asc', sortKey: 'price', reverse: false }, // asc
-  { title: 'Price: High to low', slug: 'price-desc', sortKey: 'price', reverse: true }
+  { title: 'Últimos chegados', slug: 'latest-desc', sortKey: 'lastUpdated', reverse: true },
+  { title: 'Preço: Menor para maior', slug: 'price-asc', sortKey: 'price', reverse: false }, // asc
+  { title: 'Preço: Maior para menor', slug: 'price-desc', sortKey: 'price', reverse: true }
 ];
 
 export const HIDDEN_PRODUCT_TAG = 'nextjs-frontend-hidden';

@@ -1,5 +1,5 @@
 import { items } from '@wix/data';
-import { currentCart, recommendations } from '@wix/ecom';
+import { currentCart, recommendations, cart, checkout, orders } from '@wix/ecom';
 import { redirects } from '@wix/redirects';
 import { createClient, media, OAuthStrategy } from '@wix/sdk';
 import { collections, products } from '@wix/stores';
@@ -64,7 +64,7 @@ const reshapeCart = (cart: currentCart.Cart): Cart => {
             },
             title: item.productName?.original!
           } as any as Product,
-          url: `/product/${item.url?.split('/').pop() ?? ''}`
+          url: `/produto/${item.url?.split('/').pop() ?? ''}`
         }
       };
     }),
@@ -76,7 +76,7 @@ const reshapeCart = (cart: currentCart.Cart): Cart => {
 
 const reshapeCollection = (collection: collections.Collection) =>
   ({
-    path: `/search/${collection.slug}`,
+    path: `/busca/${collection.slug}`,
     handle: collection.slug,
     title: collection.name,
     description: collection.description,
@@ -313,7 +313,7 @@ export async function getCollections(): Promise<Collection[]> {
         title: 'All',
         description: 'All products'
       },
-      path: '/search',
+      path: '/busca',
       updatedAt: new Date().toISOString()
     },
     // Filter out the `hidden` collections.
@@ -531,4 +531,80 @@ export async function createCheckoutUrl(postFlowUrl: string) {
   });
 
   return redirectSession?.fullUrl!;
+}
+
+async function createCheckout() {
+  const {
+    currentCart: { createCheckoutFromCurrentCart },
+    redirects: { createRedirectSession }
+  } = getWixClient().use({ currentCart, redirects });
+
+  const currentCheckout = await createCheckoutFromCurrentCart({
+    channelType: currentCart.ChannelType.OTHER_PLATFORM
+  });
+
+  return currentCheckout.checkoutId;
+
+  // const { redirectSession } = await createRedirectSession({
+  //   ecomCheckout: { checkoutId: currentCheckout.checkoutId },
+  //   callbacks: {
+  //     postFlowUrl: 'https://wa.me/+5511930957424?text=Olá, me passa o orçamento do pedido'
+  //   }
+  // });
+
+  // return redirectSession?._id!;
+}
+
+export async function createOrderExt() {
+  // try {
+  //   const checkoutId = await createCheckout();
+  //   console.log('checkoutId', checkoutId);
+
+  //   const order = await checkout.createOrder(checkoutId);
+  //   console.log('order', order.orderId);
+  //   return order.orderId;
+  // } catch (e) {
+  //   console.error(e);
+  //   return null;
+  // }
+  try {
+    const { getCurrentCart } = getWixClient().use(currentCart);
+    const cart = await getCurrentCart();
+
+    const order = await orders.createOrder({
+      channelInfo: {
+        type: currentCart.ChannelType.OTHER_PLATFORM
+      },
+      priceSummary: {
+        total: {
+          amount: cart.lineItems.reduce((acc, item) => acc + parseFloat(item.price?.amount || '0'), 0).toString(),
+        },
+      },
+      lineItems: cart.lineItems?.map((item: currentCart.LineItem) => ({
+        quantity: item.quantity,
+        itemType: {
+          preset: currentCart.ItemTypeItemType.PHYSICAL,
+        },
+        price: {
+          amount: item.price?.amount,
+        },
+      }))
+    });
+
+  console.log('order', order._id);
+
+    return order._id;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+
+  // const { getCurrentCart } = getWixClient().use(currentCart);
+  // const currCart = await getCurrentCart();
+  // const currCheckout = await cart.createCheckout(currCart._id!, { channelType: cart.ChannelType.OTHER_PLATFORM });
+  // console.log('currCheckout', JSON.stringify(currCheckout));
+
+  // const order = await checkout.createOrder(currCheckout.checkoutId!);
+  // console.log('order', order);
+  // return order.orderId;
 }
