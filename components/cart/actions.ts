@@ -4,7 +4,7 @@ import { addToCart, createCheckoutUrl, createOrderExt, removeFromCart, updateCar
 import { ProductVariant } from 'lib/wix/types';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect, open } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export const addItem = async (
   _prevState: unknown,
