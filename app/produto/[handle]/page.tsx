@@ -11,6 +11,7 @@ import { getProduct, getProductRecommendations } from 'lib/wix';
 import { Image } from 'lib/wix/types';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import Head from 'next/head';
 
 export async function generateMetadata({
   params
@@ -80,8 +81,15 @@ export default async function ProductPage({ params }: { params: { handle: string
           __html: JSON.stringify(productJsonLd)
         }}
       />
-      <div className="mx-auto max-w-screen-2xl px-4">
-        <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
+      <Head>
+        <title>{product.seo.title}</title>
+        <meta name="description" content={product.seo.description} />
+        <meta property="og:title" content={product.seo.title} />
+        <meta property="og:description" content={product.seo.description} />
+        <meta property="og:image" content={product.featuredImage?.url} />
+      </Head>
+      <article className="mx-auto max-w-screen-2xl px-4">
+        <section className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 lg:flex-row lg:gap-8 dark:border-neutral-800 dark:bg-black">
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
               fallback={
@@ -102,9 +110,11 @@ export default async function ProductPage({ params }: { params: { handle: string
               <ProductDescription product={product} />
             </Suspense>
           </div>
-        </div>
-        <RelatedProducts id={product.id} />
-      </div>
+        </section>
+        <section>
+          <RelatedProducts id={product.id} />
+        </section>
+      </article>
       <Footer />
     </ProductProvider>
   );

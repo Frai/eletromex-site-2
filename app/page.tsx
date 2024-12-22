@@ -1,9 +1,10 @@
 import { Carousel } from 'components/carousel';
 import { ThreeItemGrid } from 'components/grid/three-items';
 import Footer from 'components/layout/footer';
+import Head from 'next/head';
 
 export const metadata = {
-  description: 'High-performance ecommerce store built with Next.js, Vercel, and Wix.',
+  description: 'Eletromex - Atacadão de produtos eletrônicos',
   openGraph: {
     type: 'website'
   }
@@ -12,6 +13,10 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
+      <Head>
+        <title>Eletromex - Atacadão de produtos eletrônicos</title>
+        <meta name="description" content="Eletromex - Atacadão de produtos eletrônicos" />
+      </Head>
       <ThreeItemGrid />
       <Carousel />
       <Footer />
