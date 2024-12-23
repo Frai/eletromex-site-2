@@ -7,6 +7,7 @@ import { getCart } from 'lib/wix';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import './globals.css';
+import WhatsAppButton from 'components/whatsapp-button/whatsapp-button';
 
 const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env;
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             {children}
             <Toaster closeButton />
           </main>
+          <WhatsAppButton />
         </CartProvider>
       </body>
     </html>
